@@ -1,4 +1,4 @@
-# My-own-API-for-a-blog
+# My-own-API-for-a-blog with database
 
 I have created a RESTful API for a blog that allows users to create, read, update, and delete blog posts. The API is implemented in two JavaScript files: index.js and server.js.
 
