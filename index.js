@@ -60,33 +60,33 @@ const item1 = new Blog({
   date: "2023-08-01T10:00:00Z",
 })
 
-const item2 = new Blog({
-  id: 2,
-  title: "The Impact of Artificial Intelligence on Modern Businesses",
-  content:
-    "Artificial Intelligence (AI) is no longer a concept of the future. It's very much a part of our present, reshaping industries and enhancing the capabilities of existing systems. From automating routine tasks to offering intelligent insights, AI is proving to be a boon for businesses. With advancements in machine learning and deep learning, businesses can now address previously insurmountable problems and tap into new opportunities.",
-  author: "Mia Williams",
-  date: "2023-08-05T14:30:00Z",
-})
+// const item2 = new Blog({
+//   id: 2,
+//   title: "The Impact of Artificial Intelligence on Modern Businesses",
+//   content:
+//     "Artificial Intelligence (AI) is no longer a concept of the future. It's very much a part of our present, reshaping industries and enhancing the capabilities of existing systems. From automating routine tasks to offering intelligent insights, AI is proving to be a boon for businesses. With advancements in machine learning and deep learning, businesses can now address previously insurmountable problems and tap into new opportunities.",
+//   author: "Mia Williams",
+//   date: "2023-08-05T14:30:00Z",
+// })
 
-const item3 = new Blog({
-  id: 3,
-  title: "Sustainable Living: Tips for an Eco-Friendly Lifestyle",
-  content:
-    "Sustainability is more than just a buzzword; it's a way of life. As the effects of climate change become more pronounced, there's a growing realization about the need to live sustainably. From reducing waste and conserving energy to supporting eco-friendly products, there are numerous ways we can make our daily lives more environmentally friendly. This post will explore practical tips and habits that can make a significant difference.",
-  author: "Samuel Green",
-  date: "2023-08-10T09:15:00Z",
-})
+// const item3 = new Blog({
+//   id: 3,
+//   title: "Sustainable Living: Tips for an Eco-Friendly Lifestyle",
+//   content:
+//     "Sustainability is more than just a buzzword; it's a way of life. As the effects of climate change become more pronounced, there's a growing realization about the need to live sustainably. From reducing waste and conserving energy to supporting eco-friendly products, there are numerous ways we can make our daily lives more environmentally friendly. This post will explore practical tips and habits that can make a significant difference.",
+//   author: "Samuel Green",
+//   date: "2023-08-10T09:15:00Z",
+// })
 
-const defaultItems = [item1, item2, item3];
+// const items = [item1, item2, item3];
 
 app.get("/posts", (req, res) => {
 
   async function read() {
     const foundItems = await Blog.find({});
     if (foundItems.length == 0) {
-      Blog.insertMany(defaultItems);
-      res.json(defaultItems);
+      item1.save();
+      res.json(item1);
     }
     else {
       res.json(foundItems);
@@ -98,12 +98,18 @@ app.get("/posts", (req, res) => {
 
 app.get("/posts/:id", (req, res) => {
   const id = parseInt(req.params.id);
-  const foundById = posts.find((post) => post.id === id);
-  if (!foundById) {
-    return res.status(404)
-      .json({ message: "Post not found" });
+
+  async function find() {
+    const foundById = await Blog.findOne({ id: id });
+    if (!foundById) {
+      return res.status(404)
+        .json({ message: "Post not found" });
+    }
+    else {
+      res.json(foundById);
+    }
   }
-  res.json(foundById);
+  find();
 })
 
 app.post("/posts", (req, res) => {
@@ -111,16 +117,17 @@ app.post("/posts", (req, res) => {
   const content = req.body.content;
   const author = req.body.author;
   const newId = lastId += 1;
-  const post = {
+
+  const anotherItem = new Blog({
     id: newId,
     title: title,
     content: content,
     author: author,
     date: new Date()
-  }
+  })
   lastId = newId;
-  posts.push(post);
-  res.json(post).status(201);
+  anotherItem.save();
+  res.json(anotherItem).status(201);
 })
 
 app.patch("/posts/:id", (req, res) => {
