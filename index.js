@@ -87,9 +87,9 @@ app.patch("/posts/:id", (req, res) => {
     await Blog.findOneAndUpdate({ id: id },
       {
         id: id,
-        title: req.body.title || existingPost.title,
-        content: req.body.content || existingPost.content,
-        author: req.body.author || existingPost.author,
+        title: req.body.title,
+        content: req.body.content,
+        author: req.body.author 
       })
   }
   find();
